@@ -9,7 +9,7 @@ from robustness_experiment_box.database.verification_result import VerificationR
 from robustness_experiment_box.epsilon_value_estimator.binary_search_epsilon_value_estimator import (
     BinarySearchEpsilonValueEstimator,
 )
-from tests.test_epsilon_value_estimator.conftest import MockVerificationModule
+from tests.unit.test_epsilon_value_estimator.conftest import MockVerificationModule
 
 
 @pytest.fixture
