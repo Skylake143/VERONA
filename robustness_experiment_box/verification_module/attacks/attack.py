@@ -24,6 +24,6 @@ class Attack(ABC):
             epsilon (float): The perturbation magnitude for the attack.
 
         Returns:
-            torch.Tensor: The perturbed data after the attack.
+            error
         """
-        pass
+        raise NotImplementedError
