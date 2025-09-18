@@ -35,8 +35,7 @@ class PropertyGenerator(ABC):
     @abstractmethod
     def to_dict(self):
         raise NotImplementedError("This is an abstract method and should be implemented in subclasses.")
-        pass
-
+  
     @classmethod
     def from_dict(cls, data: dict):
         class_name = data.pop("type", None)

@@ -36,6 +36,7 @@ def attack_estimation_module(attack):
 def verification_context(network, datapoint, tmp_path):
     property_generator = One2AnyPropertyGenerator()
     return VerificationContext(network, datapoint, tmp_path, property_generator)
+
 @pytest.fixture
 def verifier():
     return TestVerificationModule()
@@ -43,7 +44,6 @@ def verifier():
 @pytest.fixture
 def auto_verify_module(verifier):
     return AutoVerifyModule(verifier, timeout=60)
-
 
 @pytest.fixture
 def result(datapoint):

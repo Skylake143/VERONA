@@ -1,3 +1,4 @@
+import json
 import os
 
 import pandas as pd
@@ -262,3 +263,82 @@ def test_save_verification_context_to_yaml(experiment_repository,mock_verificati
         assert data["mock_key"] == "mock_value"
 
     os.remove(file_path)
+
+
+
+
+
+def test_save_configuration_and_read_back(experiment_repository, tmp_path):
+    """Ensure JSON configuration is written correctly."""
+    experiment_repository.initialize_new_experiment("cfg_experiment")
+
+    cfg = {"a": 1, "b": "two"}
+    experiment_repository.save_configuration(cfg)
+
+    cfg_file = experiment_repository.get_act_experiment_path() / "configuration.json"
+    assert cfg_file.exists()
+
+    with open(cfg_file) as f:
+        data = json.load(f)
+    assert data == cfg
+
+
+def test_save_plots_creates_all_pngs(experiment_repository):
+    """
+    Cover the save_plots method end-to-end.
+    Creates a minimal result_df with required columns so ReportCreator works.
+    """
+    experiment_repository.initialize_new_experiment("plots_experiment")
+    result_path = experiment_repository.get_results_path() / "result_df.csv"
+
+    # minimal but valid dataframe
+    df = pd.DataFrame([
+        {"network_path": "networks/netA.onnx",
+         "epsilon_value": 0.1,
+         "result": "SAT",
+         "total_time": 0.5},
+        {"network_path": "networks/netB.onnx",
+         "epsilon_value": 0.3,
+         "result": "UNSAT",
+         "total_time": 0.3},
+    ])
+    df.to_csv(result_path)
+
+    experiment_repository.save_plots()
+
+    # All four expected plot files should now exist
+    results_dir = experiment_repository.get_results_path()
+    for fname in ["hist_figure.png", "boxplot.png", "kde_plot.png", "ecdf_plot.png"]:
+        f = results_dir / fname
+        assert f.exists() and f.stat().st_size > 0
+
+
+def test_load_verification_context_from_yaml_roundtrip(tmp_path, experiment_repository, property_generator):
+
+    experiment_repository.initialize_new_experiment("exp")
+
+    # Minimal network file
+    net_path = tmp_path / "net.onnx"
+    net_path.touch()
+    network = Network(net_path)
+
+    # Minimal data point
+    data_point = DataPoint(id="1", label=0, data=torch.tensor([1.0]))
+
+    vc_original = VerificationContext(
+        network=network,
+        data_point=data_point,
+        tmp_path=experiment_repository.get_tmp_path(),
+        property_generator=property_generator
+    )
+
+    yaml_file = tmp_path / "vc.yaml"
+
+   
+    experiment_repository.save_verification_context_to_yaml(yaml_file, vc_original)
+    vc_loaded = experiment_repository.load_verification_context_from_yaml(yaml_file)
+
+    assert isinstance(vc_loaded, VerificationContext)
+    assert vc_loaded.network.path == vc_original.network.path
+    assert vc_loaded.data_point.id == vc_original.data_point.id
+    assert vc_loaded.data_point.label == vc_original.data_point.label

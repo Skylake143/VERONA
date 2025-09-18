@@ -8,6 +8,12 @@ from robustness_experiment_box.database.experiment_repository import ExperimentR
 from robustness_experiment_box.database.network import Network
 from robustness_experiment_box.database.torch_model_wrapper import TorchModelWrapper
 from robustness_experiment_box.database.verification_context import VerificationContext
+from robustness_experiment_box.verification_module.property_generator.one2any_property_generator import (
+    One2AnyPropertyGenerator,
+)
+from robustness_experiment_box.verification_module.property_generator.one2one_property_generator import (
+    One2OnePropertyGenerator,
+)
 
 
 class MockVerificationContext:
@@ -109,3 +115,8 @@ def datapoint():
 @pytest.fixture
 def verification_context(network, datapoint, tmp_path, property_generator):
     return VerificationContext(network, datapoint, tmp_path, property_generator)
+
+
+@pytest.fixture(params=[One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
+def property_generator(request):
+    return request.param

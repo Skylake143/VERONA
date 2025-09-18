@@ -20,9 +20,9 @@ from robustness_experiment_box.verification_module.property_generator.one2one_pr
 @pytest.fixture(params=[One2AnyPropertyGenerator(), One2OnePropertyGenerator(target_class=0)])
 def property_generator(request):
     return request.param
-@pytest.fixture
-def tmp_path():
-    return Path("/tmp")
+# @pytest.fixture
+# def tmp_path():
+#     return Path("/tmp")
 
 @pytest.fixture
 def verification_context(network, datapoint, tmp_path, property_generator):
