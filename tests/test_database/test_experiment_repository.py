@@ -7,7 +7,7 @@ import torch
 import yaml
 
 from robustness_experiment_box.database.dataset.data_point import DataPoint
-from robustness_experiment_box.database.network import Network
+from robustness_experiment_box.database.machine_learning_method.onnx_network import ONNXNetwork
 from robustness_experiment_box.database.verification_context import VerificationContext
 
 
@@ -91,12 +91,12 @@ def test_get_network_list(experiment_repository):
 
     experiment_name = "test_experiment"
     experiment_repository.initialize_new_experiment(experiment_name)
-    network_path = experiment_repository.network_folder / "network1"
+    network_path = experiment_repository.network_folder / "network1.onnx"
     network_path.mkdir()
     network_list = experiment_repository.get_network_list()
 
     assert len(network_list) == 1
-    assert network_list[0].path == experiment_repository.network_folder /"network1"
+    assert network_list[0].path == experiment_repository.network_folder /"network1.onnx"
 
 
 def test_save_results(experiment_repository, epsilon_value_result):
@@ -155,7 +155,7 @@ def test_create_verification_context(experiment_repository, tmp_path):
     # Create a sample Network, DataPoint, and PropertyGenerator
     network_path = tmp_path / "network.onnx"
     network_path.touch()
-    network = Network(network_path)
+    network = ONNXNetwork(network_path)
 
     data_point = DataPoint(id="1", label=0, data=torch.tensor([1.0, 2.0, 3.0]))
 
@@ -320,7 +320,7 @@ def test_load_verification_context_from_yaml_roundtrip(tmp_path, experiment_repo
     # Minimal network file
     net_path = tmp_path / "net.onnx"
     net_path.touch()
-    network = Network(net_path)
+    network = ONNXNetwork(net_path)
 
     # Minimal data point
     data_point = DataPoint(id="1", label=0, data=torch.tensor([1.0]))
