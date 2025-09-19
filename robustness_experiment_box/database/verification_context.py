@@ -4,7 +4,7 @@ import pandas as pd
 
 from robustness_experiment_box.database.dataset.data_point import DataPoint
 from robustness_experiment_box.database.epsilon_status import EpsilonStatus
-from robustness_experiment_box.database.machine_learning_method.network import Network
+from robustness_experiment_box.database.network import Network
 from robustness_experiment_box.database.vnnlib_property import VNNLibProperty
 from robustness_experiment_box.verification_module.property_generator.property_generator import PropertyGenerator
 
@@ -125,7 +125,7 @@ class VerificationContext:
         }
 
     @classmethod
-    def from_dict(cls, data: dict) -> "VerificationContext":
+    def from_dict(cls, data: dict):
         """
         Create a VerificationContext from a dictionary.
 
@@ -135,9 +135,7 @@ class VerificationContext:
         Returns:
             VerificationContext: The created VerificationContext.
         """
-        # Recreate the network from its dictionary representation
-
-        network = Network.from_dict(data["network"]) 
+        network = Network.from_dict(data["network"])
         data_point = DataPoint.from_dict(data["data_point"])
         tmp_path = Path(data["tmp_path"])
         property_generator = PropertyGenerator.from_dict(data["property_generator"])
