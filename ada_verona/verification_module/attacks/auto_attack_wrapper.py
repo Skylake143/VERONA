@@ -45,8 +45,7 @@ class AutoAttackWrapper(Attack):
             Tensor: The perturbed data.
         """
         adversary = AutoAttack(
-            model, norm=self.norm, eps=epsilon, version=self.version, device=self.device, verbose=self.verbose
-        )
+            model, norm=self.norm, eps=epsilon, version=self.version, device=self.device)
         data = data.unsqueeze(0)
 
         # auto attack requires NCHW input format
