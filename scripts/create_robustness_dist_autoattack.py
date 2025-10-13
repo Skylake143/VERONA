@@ -1,5 +1,6 @@
 import logging
 from pathlib import Path
+import random
 
 import torch
 import torchvision
@@ -61,7 +62,15 @@ def main():
         root="./data", train=True, download=True, transform=transforms.ToTensor()
     )
 
-    dataset = PytorchExperimentDataset(dataset=torch_dataset)
+    dataset_size = 50  
+    
+    # Create random indices for sampling
+    total_dataset_size = len(torch_dataset)
+    subset_indices = random.sample(range(total_dataset_size), dataset_size)
+    
+    subset_torch_dataset = torch.utils.data.Subset(torch_dataset, subset_indices)
+    
+    dataset = PytorchExperimentDataset(dataset=subset_torch_dataset)
 
     experiment_repository = ExperimentRepository(base_path=experiment_repository_path, network_folder=network_folder)
 
