@@ -137,7 +137,7 @@ class ExperimentRepository:
         if self.network_folder is None:
             raise Exception("No Network folder given.")
         else:
-            network_path_list = [file for file in self.network_folder.iterdir()]
+            network_path_list = [file for file in self.network_folder.iterdir() if file.is_file() and file.suffix.lower() == '.onnx']
             network_list = [ONNXNetwork(x) for x in network_path_list]
         return network_list
         
@@ -208,7 +208,7 @@ class ExperimentRepository:
         result_df_path = self.get_results_path() / DEFAULT_RESULT_CSV_NAME
         if result_df_path.exists():
             df = pd.read_csv(result_df_path, index_col=0)
-            df["network"] = df.network_path.str.split("/").apply(lambda x: x[-1]).apply(lambda x: x.split(".")[0])
+            # df["network"] = df.network_path.str.split("/").apply(lambda x: x[-1]).apply(lambda x: x.split(".")[0])
 
             return df
         else:
