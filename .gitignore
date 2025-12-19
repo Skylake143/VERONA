@@ -6,3 +6,6 @@ tests/test_experiment/*
 site/
 examples/example_experiment/results/
 data/
+.csv*
+.onnx*
+.pth*
