@@ -10,3 +10,4 @@ data/
 .onnx*
 .pth*
 examples/Networks/
+examples/scripts/logs
